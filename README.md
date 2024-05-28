@@ -32,7 +32,17 @@ print(lgde.discovered_dict_)
 To discover new keywords we first construct a semantic similarity graph using CkNN [1] and then compute the semantic community of each seed keyword using fast local community detection with Severability [2]. The parameter $k$ determines the graph density and $t$ the size of the semantic communities. See documentation for more details and additional functionality for dictionary evaluation and plotting.
 
 ## Experiments
+
+> :warning: **Content warning**: Our experiments include text and word phrases derived from Reddit, Gab and 4chan posts with potentially triggering content including anti-Semitism, racism, homophobia, misogyny and other forms of violent or hateful language. 
+
 Our experiments of *LGDE* applied to a corpus of hate speech-related communication on Reddit and Gab can be found in the `experiments/redgab` directory. Our additional experiment of *LGDE* applied to a corpus of conspiracy-related communication on 4chan can be found in the `experiments/4chan` directory. 
+
+
+## Contributors
+
+- Dominik Schindler, GitHub: `d-schindler <https://github.com/d-schindler>`
+
+We always look out for individuals that are interested in contributing to this open-source project. Even if you are just using `LGDE` and made some minor updates, we would be interested in your input. 
 
 ## Cite
 Please cite our paper if you use our code or data in your own work:
