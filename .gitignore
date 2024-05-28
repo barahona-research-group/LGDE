@@ -1,5 +1,6 @@
 figures/
-data/
+experiments/4chan/data/
+experiments/redgab/data/raw/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

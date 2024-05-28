@@ -44,7 +44,7 @@ word_vecs_all_dimensions = [word_vecs_50d, word_vecs_100d, word_vecs_300d]
 word_list = list(embedding_50d["word_string"])
 
 # load redgab data and split into train and test
-with open("data/redgab_pos_data.pkl", "rb") as handle:
+with open("data/raw/redgab_pos_data.pkl", "rb") as handle:
     domain_data = pickle.load(handle)
 
 X_train, X_test, y_train, y_test = train_test_split(
