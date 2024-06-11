@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/796673665.svg)](https://zenodo.org/doi/10.5281/zenodo.11567135)
+
 # Local Graph-based Dictionary Expansion (LGDE)
 Python code for the paper "LGDE: Local Graph-based Dictionary Expansion" by Dominik J Schindler, Sneha Jha, Xixuan Zhang, Kilian Buehling, Annett Heft and Mauricio Barahona: http://arxiv.org/abs/2405.07764 
 
