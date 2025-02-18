@@ -37,7 +37,9 @@ To discover new keywords we first construct a semantic similarity graph using Ck
 
 > :warning: **Content warning**: Our experiments include text and word phrases derived from Reddit, Gab and 4chan posts with potentially triggering content including anti-Semitism, racism, homophobia, misogyny and other forms of violent or hateful language. 
 
-Our experiments of *LGDE* applied to a corpus of hate speech-related communication on Reddit and Gab can be found in the `experiments/redgab` directory. Our additional experiment of *LGDE* applied to a corpus of conspiracy-related communication on 4chan can be found in the `experiments/4chan` directory. 
+- Our application to a corpus of hate speech-related communication on Reddit and Gab can be found in the `experiments/redgab` directory. 
+- Our application to a benchmark 20 Newsgroups dataset can be found in `experiments/20newsgroups` directory.
+- Our additional experiment of *LGDE* applied to a corpus of conspiracy-related communication on 4chan can be found in the `experiments/4chan` directory. 
 
 
 ## Contributors
