@@ -8,7 +8,14 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
-from lgde import Thresholding, LGDE, evaluate_prediction
+from lgde import (
+    Thresholding,
+    KNearestNeighbors,
+    IKEA,
+    LGDEWithCDlib,
+    LGDE,
+    evaluate_prediction,
+)
 
 ###################################
 # data loading and pre-processing #
@@ -65,6 +72,7 @@ seed_dict = ["nigger", "faggot", "retard", "retarded", "cunt"]
 
 dimension_string = ["50", "100", "300"]
 
+
 ###############
 # grid search #
 ###############
@@ -104,6 +112,109 @@ for dim_ind, dim in enumerate(dimension_string):
         "recall": recall_eps,
         "fscore": fscore_eps,
         "eps": epsilons,
+    }
+
+    #######################################
+    # grid search for kNN hyperparameters #
+    #######################################
+
+    ks = np.arange(1, 50)
+    size_disc_knn = np.zeros(len(ks))
+    precision_knn = np.zeros(len(ks))
+    recall_knn = np.zeros(len(ks))
+    fscore_knn = np.zeros(len(ks))
+
+    # create kNN object
+    knn = KNearestNeighbors(seed_dict, word_list, word_vecs)
+
+    for i, k in tqdm(enumerate(ks), total=len(ks)):
+        # compute k-most similar words of keywords
+        knn.expand(k=k)
+        size_disc_knn[i] = len(knn.discovered_dict_)
+        # evaluate expanded dictionary on training set
+        p, r, f = evaluate_prediction(
+            knn.expanded_dict_, y_train, dt_train, with_report=False
+        )
+        precision_knn[i] = p
+        recall_knn[i] = r
+        fscore_knn[i] = f
+
+    results_knn = {
+        "size": size_disc_knn,
+        "precision": precision_knn,
+        "recall": recall_knn,
+        "fscore": fscore_knn,
+        "ks": ks,
+    }
+
+    #######################################
+    # grid search for IKEA hyperparameter #
+    #######################################
+
+    epsilons = np.arange(0.3, 1, 0.001)
+    size_disc_ikea = np.zeros_like(epsilons)
+    precision_ikea = np.zeros_like(epsilons)
+    recall_ikea = np.zeros_like(epsilons)
+    fscore_ikea = np.zeros_like(epsilons)
+
+    # create IKEA object
+    ikea = IKEA(seed_dict, word_list, word_vecs)
+
+    for i, epsilon in tqdm(enumerate(epsilons), total=len(epsilons)):
+        # compute epsilon balls around keywords
+        ikea.expand(epsilon=epsilon)
+        size_disc_ikea[i] = len(ikea.discovered_dict_)
+        # evaluate expanded dictionary on training set
+        p, r, f = evaluate_prediction(
+            ikea.expanded_dict_, y_train, dt_train, with_report=False
+        )
+        precision_ikea[i] = p
+        recall_ikea[i] = r
+        fscore_ikea[i] = f
+
+    results_ikea = {
+        "size": size_disc_ikea,
+        "precision": precision_ikea,
+        "recall": recall_ikea,
+        "fscore": fscore_ikea,
+        "eps": epsilons,
+    }
+
+    #########################################################
+    # grid search for LGDE with LSWL / SIWO hyperparameters #
+    #########################################################
+
+    ks_lswl = np.arange(3, 21, dtype=int)
+    size_disc_lswl = np.zeros(len(ks_lswl))
+    precision_lswl = np.zeros(len(ks_lswl))
+    recall_lswl = np.zeros(len(ks_lswl))
+    fscore_lswl = np.zeros(len(ks_lswl))
+    communities_lswl = []
+
+    # create LGDEWithCDlib object
+    lswl = LGDEWithCDlib(seed_dict, word_list, word_vecs)
+
+    for i, k in tqdm(enumerate(ks_lswl), total=len(ks_lswl)):
+        # expand with LGDE based on LSWL
+        lswl.expand(k=k, method="lswl", disable_tqdm=True)
+        size_disc_lswl[i] = len(lswl.discovered_dict_)
+        communities_lswl.append(lswl.semantic_communities_)
+        # evaluate expanded dictionary on training set
+        p, r, f = evaluate_prediction(
+            lswl.expanded_dict_, y_train, dt_train, with_report=False
+        )
+        precision_lswl[i] = p
+        recall_lswl[i] = r
+        fscore_lswl[i] = f
+
+    # store results
+    results_lswl = {
+        "size": size_disc_lswl,
+        "precision": precision_lswl,
+        "recall": recall_lswl,
+        "fscore": fscore_lswl,
+        "communities": communities_lswl,
+        "ks": ks_lswl,
     }
 
     ########################################
@@ -149,10 +260,16 @@ for dim_ind, dim in enumerate(dimension_string):
         "ks": ks,
     }
 
-    # store thresholding and gbda results in dictionary of dictionaries
-    results = {"th": results_th, "lgde": results_lgde}
+    # store all results in dictionary of dictionaries
+    results = {
+        "th": results_th,
+        "lgde": results_lgde,
+        "knn": results_knn,
+        "ikea": results_ikea,
+        "lswl": results_lswl,
+    }
 
     with open(
-        f"data/gs_th_lgde_glove_redgab_15_0.8_{dim}d_1.0mu_df.pkl", "wb"
+        f"data/gs_baselines_lgde_glove_redgab_15_0.8_{dim}d_1.0mu_df.pkl", "wb"
     ) as handle:
         pickle.dump(results, handle, protocol=pickle.HIGHEST_PROTOCOL)
