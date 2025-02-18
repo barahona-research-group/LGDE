@@ -16,7 +16,7 @@ install_requires = [
 
 setup(
     name="LGDE",
-    version="0.0.1",
+    version="1.1.0",
     description="Local Graph-based Dictionary Expansion Python package",
     url="https://github.com/barahona-research-group/LGDE",
     author="Dominik J. Schindler",

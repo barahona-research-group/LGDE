@@ -1,4 +1,4 @@
-"""Code for dictionary expansion."""
+"""Code for dictionary expansion with LGDE."""
 
 import itertools
 import random
@@ -89,69 +89,6 @@ class BaseExpansion:
         return self.semantic_sim[self.word_to_ind[kw1], self.word_to_ind[kw2]]
 
 
-class Thresholding(BaseExpansion):
-    """Class for thresholding-based dictionary expansion.
-
-    Parameters
-    ----------
-    seed_dict : list[str]
-        List of words in seed dictionary.
-
-    word_list : list[str] of length n_words
-        List of all words considered.
-
-    word_vecs : array like of shape (n_words, r)
-        Word vectors with dimension r for each word in word_list.
-
-    Attributes
-    ----------
-    semantic_sim : array of shape (n_words, n_words)
-        Normalised cosine similarity between pairs of words.
-
-    expanded_dict_ : list[str]
-        List of words in expanded dictionary.
-
-    discovered_dict_ : list[str]
-        List of discovered keywords.
-
-    epsilon_balls_ : dict
-        Dictionary that maps seed keywords to their semantic epsilon balls.
-    """
-
-    def __init__(self, seed_dict, word_list, word_vecs):
-        # initialise base class
-        super().__init__(seed_dict, word_list, word_vecs)
-
-        # attributes
-        self.epsilon_balls_ = {}
-
-    def expand(self, epsilon=0.8):
-        """Method to obtain most similar words to seed dictionary via simple thresholding.
-
-        Parameters:
-        -----------
-        epsilon : float
-            Minimal normalised semantic similarity to discovered words, should be between
-            0 and 1.
-        """
-        self.epsilon_balls_ = {}
-        for keyword in self.seed_dict:
-            keyword_ind = self.word_to_ind[keyword]
-            most_similar_ind = list(
-                np.where(self.semantic_sim[keyword_ind, :] > epsilon)[0]
-            )
-            self.epsilon_balls_[keyword] = [self.word_list[i] for i in most_similar_ind]
-
-        # compile discovered dictionary
-        self.discovered_dict_ = list(
-            set(itertools.chain.from_iterable(list(self.epsilon_balls_.values())))
-            - set(self.seed_dict)
-        )
-
-        # summarise expanded dictionary
-        self.expanded_dict_ = self.seed_dict + self.discovered_dict_
-
-
 class LGDE(BaseExpansion):
     """Class for Local Graph-based Dictionary Expansion.
 
@@ -194,7 +131,7 @@ class LGDE(BaseExpansion):
     -----------
         .. [1] T. Berry and T. Sauer, 'Consistent manifold representation for
         topological data analysis', *Foundations of Data Science*, vol. 1, no. 1,
-        p. 1-38, Feb. 2019, doi: 10.3934/fods.2019001.
+        pp. 1-38, Feb. 2019, doi: 10.3934/fods.2019001.
         .. [2] Y. Yu William, D. Jean-Charles, S. Yaliraki and M. Barahona, 'Severability
         of mesoscale components and local time scales in dynamical networks',
         arXiv: 2006.02972, Jun. 2020, doi: 10.48550/arXiv.2006.02972
@@ -360,7 +297,7 @@ class LGDE(BaseExpansion):
     ):
         """Plot local semantic communities.
 
-            Parameters:
+        Parameters:
         -----------
         node_size: float
             Size of nodes.
@@ -400,7 +337,12 @@ class LGDE(BaseExpansion):
         # otherwise compute local community with Severability
         else:
             community_ind = node_component(P=P, i=keyword_ind, t=t)[0]
-            return [self.word_list[i] for i in community_ind]
+            # if keyword was found as Severability orphan, return keyword
+            if len(community_ind) == 0:
+                return [keyword]
+            # otherwise return local community
+            else:
+                return [self.word_list[i] for i in community_ind]
 
 
 def _compute_cknn(D, k=5, delta=1.0):
