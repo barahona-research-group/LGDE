@@ -44,7 +44,7 @@ To discover new keywords we first construct a semantic similarity graph using Ck
 
 ## Contributors
 
-- Dominik Schindler, GitHub: `d-schindler <https://github.com/d-schindler>`
+- Juni Schindler, GitHub: `juni-schindler <https://github.com/juni-schindler>`
 
 We always look out for individuals that are interested in contributing to this open-source project. Even if you are just using `LGDE` and made some minor updates, we would be interested in your input. 
 
