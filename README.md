@@ -1,7 +1,7 @@
 [![DOI](https://zenodo.org/badge/796673665.svg)](https://zenodo.org/doi/10.5281/zenodo.11567135)
 
 # Local Graph-based Dictionary Expansion (LGDE)
-Python code for the paper "LGDE: Local Graph-based Dictionary Expansion" by Dominik J Schindler, Sneha Jha, Xixuan Zhang, Kilian Buehling, Annett Heft and Mauricio Barahona: http://arxiv.org/abs/2405.07764 
+Python code for the paper "LGDE: Local Graph-based Dictionary Expansion" by Juni Schindler, Sneha Jha, Xixuan Zhang, Kilian Buehling, Annett Heft and Mauricio Barahona: https://doi.org/10.1162/coli_a_00562
 
 ## Installation
 Clone the repository and open the folder in your terminal. 
@@ -52,13 +52,14 @@ We always look out for individuals that are interested in contributing to this o
 Please cite our paper if you use our code or data in your own work:
 
 ```
-@article{schindlerLGDELocalGraphbased2024,
-  author = {Schindler, Dominik J. and Jha, Sneha and Zhang, Xixuan and Buehling, Kilian and Heft, Annett and Barahona, Mauricio},
+@article{schindlerLGDELocalGraphbased2025,
+  author = {Schindler, Juni and Jha, Sneha and Zhang, Xixuan and Buehling, Kilian and Heft, Annett and Barahona, Mauricio},
   title = {LGDE: Local Graph-based Dictionary Expansion},
-  publisher = {arXiv},
-  year = {2024},
-  doi = {10.48550/arXiv.2405.07764},
-  url = {http://arxiv.org/abs/2405.07764},
+  publisher = {Computational Linguistics},
+  year = {2025},
+  doi = {10.1162/coli_a_00562},
+  pages = {1--32},
+  issn = {0891-2017}
 }
 ```
 
